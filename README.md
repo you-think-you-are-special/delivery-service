@@ -6,12 +6,16 @@
 # Run
 
 ```bash
+
 # install dependencies
 npm ci
 
+# build index
+# If you won't specify a path, routes.txt in will be used as default source
+npm build path_to_routes.txt
+
 # Run application
-# If you won't specify a path, routes.txt will be used as default source
-npm start path_to_routes.txt
+npm start
 
 ```
 

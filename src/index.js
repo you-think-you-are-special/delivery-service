@@ -7,11 +7,11 @@ const caseThree = require('./case_three');
 
 
 function createReplServer() {
-  console.info('\nWelcome to Eko ​Delivery​ Service!');
+  console.info('\nWelcome to ​Delivery​ Service!');
   console.info('Type ".help" to continue\n');
 
   const replServer = repl.start({
-    prompt: '​Eko​ Delivery​ ​Service> ',
+    prompt: 'Delivery​ ​Service> ',
   });
 
   delete replServer.commands.save;
