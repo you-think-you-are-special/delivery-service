@@ -1,4 +1,4 @@
-const { PriorityQueue } = require('../../data_structures/priority_queue');
+const { PriorityQueue } = require('../priority_queue');
 
 
 describe('PriorityQueue', () => {

@@ -1,5 +1,5 @@
-const { GraphEdge } = require('../../data_structures/graph_edge');
-const { GraphVertex } = require('../../data_structures/graph_vertex');
+const { GraphEdge } = require('../graph_edge');
+const { GraphVertex } = require('../graph_vertex');
 
 
 describe('GraphEdge', () => {

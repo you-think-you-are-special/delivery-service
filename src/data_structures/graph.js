@@ -1,3 +1,7 @@
+const { GraphEdge } = require('./graph_edge');
+const { GraphVertex } = require('./graph_vertex');
+
+
 class Graph {
   /**
    * @param {boolean} isDirected
@@ -71,7 +75,7 @@ class Graph {
 
     // Check if edge has been already added.
     if (this.edges[edge.getKey()]) {
-      throw new Error('Edge has already been added before');
+      throw new Error(`Edge ${edge.getKey()} has already been added before`);
     } else {
       this.edges[edge.getKey()] = edge;
     }
@@ -193,6 +197,20 @@ class Graph {
    */
   toString() {
     return Object.keys(this.vertices).toString();
+  }
+
+  static create(routes, { isDirected = false }) {
+    const graph = new Graph(isDirected);
+
+    routes.forEach((route) => {
+      const vertexA = graph.getVertexByKey(route[0]) || new GraphVertex(route[0]);
+      const vertexB = graph.getVertexByKey(route[1]) || new GraphVertex(route[1]);
+      const edgeAB = new GraphEdge(vertexA, vertexB, parseInt(route.slice(2), 10));
+
+      graph.addEdge(edgeAB);
+    });
+
+    return graph;
   }
 }
 

@@ -1,5 +1,6 @@
-import {MinHeap} from '../data_structures/min_heap';
-import Comparator from '../../../utils/comparator/Comparator';
+const { MinHeap } = require('../min_heap');
+const { Comparator } = require('../../utils/comparator');
+
 
 describe('MinHeap', () => {
   it('should create an empty min heap', () => {

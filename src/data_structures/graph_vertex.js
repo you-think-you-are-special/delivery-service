@@ -1,5 +1,3 @@
-const {LinkedList} = require('./linked_list');
-
 class GraphVertex {
   /**
    * @param {*} value
@@ -9,22 +7,10 @@ class GraphVertex {
       throw new Error('Graph vertex must have a value');
     }
 
-    /**
-     * @param {GraphEdge} edgeA
-     * @param {GraphEdge} edgeB
-     */
-    const edgeComparator = (edgeA, edgeB) => {
-      if (edgeA.getKey() === edgeB.getKey()) {
-        return 0;
-      }
-
-      return edgeA.getKey() < edgeB.getKey() ? -1 : 1;
-    };
-
     // Normally you would store string value like vertex name.
     // But generally it may be any object as well
     this.value = value;
-    this.edges = new LinkedList(edgeComparator);
+    this.edges = new Map();
   }
 
   /**
@@ -32,7 +18,7 @@ class GraphVertex {
    * @returns {GraphVertex}
    */
   addEdge(edge) {
-    this.edges.append(edge);
+    this.edges.set(edge.getKey(), edge);
 
     return this;
   }
@@ -41,37 +27,24 @@ class GraphVertex {
    * @param {GraphEdge} edge
    */
   deleteEdge(edge) {
-    this.edges.delete(edge);
+    delete this.edges.delete(edge.getKey());
   }
 
   /**
    * @returns {GraphVertex[]}
    */
   getNeighbors() {
-    const edges = this.edges.toArray();
-
-    /** @param {LinkedListNode} node */
-    const neighborsConverter = (node) => {
-      return node.value.startVertex === this ? node.value.endVertex : node.value.startVertex;
-    };
-
     // Return either start or end vertex.
     // For undirected graphs it is possible that current vertex will be the end one.
-    return edges.map(neighborsConverter);
+    return Array.from(this.edges.values())
+      .map(edge => edge.startVertex === this ? edge.endVertex : edge.startVertex);
   }
 
   /**
    * @return {GraphEdge[]}
    */
   getEdges() {
-    return this.edges.toArray().map(linkedListNode => linkedListNode.value);
-  }
-
-  /**
-   * @return {number}
-   */
-  getDegree() {
-    return this.edges.toArray().length;
+    return Array.from(this.edges.values());
   }
 
   /**
@@ -79,11 +52,7 @@ class GraphVertex {
    * @returns {boolean}
    */
   hasEdge(requiredEdge) {
-    const edgeNode = this.edges.find({
-      callback: edge => edge === requiredEdge,
-    });
-
-    return !!edgeNode;
+    return this.edges.has(requiredEdge.getKey());
   }
 
   /**
@@ -91,11 +60,8 @@ class GraphVertex {
    * @returns {boolean}
    */
   hasNeighbor(vertex) {
-    const vertexNode = this.edges.find({
-      callback: edge => edge.startVertex === vertex || edge.endVertex === vertex,
-    });
-
-    return !!vertexNode;
+    return !!Array.from(this.edges.values())
+      .find(edge => edge.startVertex === vertex || edge.endVertex === vertex);
   }
 
   /**
@@ -103,13 +69,8 @@ class GraphVertex {
    * @returns {(GraphEdge|null)}
    */
   findEdge(vertex) {
-    const edgeFinder = (edge) => {
-      return edge.startVertex === vertex || edge.endVertex === vertex;
-    };
-
-    const edge = this.edges.find({ callback: edgeFinder });
-
-    return edge ? edge.value : null;
+    return Array.from(this.edges.values())
+      .find(edge => edge.startVertex === vertex || edge.endVertex === vertex) || null;
   }
 
   /**
@@ -126,6 +87,28 @@ class GraphVertex {
     this.getEdges().forEach(edge => this.deleteEdge(edge));
 
     return this;
+  }
+
+  /**
+   * @param {String} to
+   * @param {Number} limit
+   */
+  countPaths(to, { limit = Infinity } = {}) {
+    if (limit === 0) {
+      return 0;
+    }
+
+    return this.getEdges()
+      .reduce((acc, edge) => {
+        const vertex = edge.endVertex;
+        if (vertex.value !== to) {
+          acc += vertex.countPaths(to, { limit: limit - 1 });
+        } else {
+          acc += 1;
+        }
+
+        return acc;
+      }, 0);
   }
 
   /**

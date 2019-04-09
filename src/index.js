@@ -1,10 +1,16 @@
 const repl = require('repl');
-const $curry = require('lodash.curry');
-const {Graph} = require('./graph');
-const caseOne = require('./case_one');
-const caseTwo = require('./case_two');
-const caseThree = require('./case_three');
+const fs = require('fs');
+const path = require('path');
+const config = require('config');
+const { deserialize } = require('v8');
+const { Graph } = require('./data_structures/graph');
+const caseOne = require('./actions/case_one');
+const caseTwo = require('./actions/case_two');
+const caseThree = require('./actions/case_three');
+const { IndexDal } = require('./index_dal');
 
+
+const indexDirPath = path.normalize(config.indexPath || `${__dirname}/../index/`);
 
 function createReplServer() {
   console.info('\nWelcome to ​Delivery​ Service!');
@@ -22,29 +28,35 @@ function createReplServer() {
   return replServer;
 }
 
-(async function main() {
-  const graph = new Graph();
+function runAction(action, params) {
+  return function (route) {
+    action(route, params);
+    this.displayPrompt();
+  };
+}
 
-  // Reading and preparing data from disc
-  // It is better to pre calculate if that possible. Than do that in runtime
-  await graph.load();
+(async function main() {
+  const routes = deserialize(fs.readFileSync(`${indexDirPath}/routes.v8`));
+  const graph = Graph.create(routes, { isDirected: true });
+  const indexDal = new IndexDal();
+  await indexDal.load();
 
   const replServer = createReplServer();
 
   replServer.defineCommand('case1', {
     help: 'Calculate the delivery cost of the given delivery route. Example: ".case1 A-B-E"',
-    action: $curry(caseOne)(graph)
+    action: runAction(caseOne, { graph }),
   });
 
   replServer.defineCommand('case2', {
     help: 'Calculate the number of possible delivery route that can be construct by the given conditions. ' +
       'Example: ".case2 E-D limit:4"',
-    action: $curry(caseTwo)(graph)
+    action: runAction(caseTwo, { graph }),
   });
 
   replServer.defineCommand('case3', {
     help: 'Calculate the cheapest delivery route between two town. Example: ".case3 E-D"',
-    action: $curry(caseThree)(graph)
+    action: runAction(caseThree, { indexDal }),
   });
 })()
   .catch(console.error);

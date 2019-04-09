@@ -1,4 +1,5 @@
-const { Comparator } = require('../../data_structures/comparator');
+const { Comparator } = require('../comparator');
+
 
 describe('Comparator', () => {
   it('should compare with default comparator function', () => {

@@ -1,4 +1,4 @@
-const { PriorityQueue } = require('./data_structures/priority_queue');
+const { PriorityQueue } = require('../data_structures/priority_queue');
 
 
 function createObjectWithDefaults(value) {
@@ -14,6 +14,12 @@ function createObjectWithDefaults(value) {
   return { proxy, orig: obj };
 }
 
+/**
+ * Dijkstra algorithm adaptation
+ * @param {Graph} graph
+ * @param {GraphVertex} startVertex
+ * @returns {{costs}}
+ */
 module.exports.calcCheapestCosts = function (graph, startVertex) {
   // Init helper variables that we will need for Dijkstra algorithm.
   const { proxy: costs, orig: costsResult } = createObjectWithDefaults(Infinity);
@@ -67,4 +73,31 @@ module.exports.calcCheapestCosts = function (graph, startVertex) {
   }
 
   return { costs: costsResult };
+};
+
+
+/**
+ * @param {Graph} graph
+ * @param {[string]} path
+ * @return {number|null}
+ */
+module.exports.calcPathCost = (graph, path) => {
+  let cost = 0;
+
+  for (let i = 0; i < path.length - 1; i++) {
+    const key = path[i];
+    const vertex = graph.getVertexByKey(key);
+    if (!vertex) {
+      return null;
+    }
+
+    const edge = vertex.findEdge(graph.getVertexByKey(path[i + 1]));
+    if (!edge) {
+      return null;
+    }
+
+    cost += edge.weight;
+  }
+
+  return cost;
 };

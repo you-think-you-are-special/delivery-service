@@ -1,5 +1,5 @@
-const { GraphVertex } = require('../../data_structures/graph_vertex');
-const { GraphEdge } = require('../../data_structures/graph_edge');
+const { GraphVertex } = require('../graph_vertex');
+const { GraphEdge } = require('../graph_edge');
 
 
 describe('GraphVertex', () => {
@@ -21,7 +21,6 @@ describe('GraphVertex', () => {
     expect(vertex.value).toBe('A');
     expect(vertex.toString()).toBe('A');
     expect(vertex.getKey()).toBe('A');
-    expect(vertex.edges.toString()).toBe('');
     expect(vertex.getEdges()).toEqual([]);
   });
 
@@ -165,25 +164,4 @@ describe('GraphVertex', () => {
     expect(vertexA.findEdge(vertexC)).toBeNull();
   });
 
-  it('should calculate vertex degree', () => {
-    const vertexA = new GraphVertex('A');
-    const vertexB = new GraphVertex('B');
-
-    expect(vertexA.getDegree()).toBe(0);
-
-    const edgeAB = new GraphEdge(vertexA, vertexB);
-    vertexA.addEdge(edgeAB);
-
-    expect(vertexA.getDegree()).toBe(1);
-
-    const edgeBA = new GraphEdge(vertexB, vertexA);
-    vertexA.addEdge(edgeBA);
-
-    expect(vertexA.getDegree()).toBe(2);
-
-    vertexA.addEdge(edgeAB);
-    expect(vertexA.getDegree()).toBe(3);
-
-    expect(vertexA.getEdges().length).toEqual(3);
-  });
 });

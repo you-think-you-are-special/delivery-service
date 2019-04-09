@@ -5,13 +5,16 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node .",
-    "build index": "node ./src/build_index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node ./src/index_build.js",
+    "test": "jest"
   },
   "author": "Alexander Litvinov <sanderlimail@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "lodash.curry": "^4.1.1",
-    "node-dijkstra": "^2.5.0"
+    "config": "^3.1.0",
+    "lodash.get": "^4.4.2"
+  },
+  "devDependencies": {
+    "jest": "^24.7.1"
   }
 }
