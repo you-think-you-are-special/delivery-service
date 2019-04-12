@@ -1,0 +1,26 @@
+{
+  "name": "delivery-service",
+  "version": "1.0.0",
+  "description": "Delivery​ Service",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node .",
+    "build": "node ./src/index_build.js",
+    "test": "jest"
+  },
+  "author": "Alexander Litvinov <sanderlimail@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "config": "^3.1.0",
+    "lodash.get": "^4.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^24.7.1"
+  }
+}
