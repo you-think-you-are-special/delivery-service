@@ -12,7 +12,7 @@ npm ci
 npm test
 
 # build index
-# If you won't specify a path, routes.txt in will be used as default source
+# If you won't specify a path, routes.txt will be used as default source
 npm run build path_to_routes.txt
 
 # Run application
